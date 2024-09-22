@@ -1,30 +1,51 @@
-const express = require("express")
+// const express = require("express")
 
+// const app = express()
+// // rh -> route handler
+// // app.use("/route",rh,[rh2,rh3],rh4,rh5)
+
+// //GET /users =>middleware chain=>Request handler
+// app.use("/",(req,res,next)=>{
+// next();
+// })
+// app.get("/user",
+//     (req, res, next) => {
+//         //Route Handler
+//         console.log("Handling the route user!!")
+
+//         next();
+//         // res.send("Response");
+//     }, (req, res,next) => {
+//         //another Route Handler
+//         console.log("Handling the route user2!!")
+//         // res.send("Response2!!");
+//         next();
+//     }, (req, res,next) => {
+//         //another Route Handler
+//         console.log("Handling the route user3!!")
+//         res.send("Response3!!");
+//     }
+// );
+
+// app.listen(7777, () => {
+//     console.log("Server is successfully listening on port 7777...")
+// })
+
+
+
+const express = require("express")
+const { adminAuth, userAuth } = require("./middlewares/auth")
 const app = express()
-// app.get("/user", (req, res) => {
-//     // GET http://localhost:7777/user?userId=101
-//     console.log(req.query) //{ userId: '101' }
-//     res.send({ firstName: "Triguna", lastName: "Swain" });
-// });
-app.get("/user/:userId/:name/:password", (req, res) => {
-    // GET http://localhost:7777/user/101/triguna/testing
-    console.log(req.params) //{ userId: '101', name: 'triguna', password: 'testing' }
-    res.send({ firstName: "Triguna", lastName: "Swain" });
-});
-app.post("/user", (req, res) => {
-    console.log("Save Data to the database")
-    res.send("Data successfully saved to the database");
-});
-app.delete("/user", (req, res) => {
-    res.send("Data deleted successfully");
-});
-//request Handler
-app.use("/test", (req, res) => {
-    res.send("Hello from the server");
-});
-// app.use("/",(req,res)=>{
-//     res.send("Namaste Triguna");
-//     });
+app.use("/admin", adminAuth)
+app.post("/user/login", (req, res) => {
+    res.send("User logged in successfully!")
+})
+app.get("/user/data", userAuth, (req, res) => {
+    res.send("User Data sent")
+})
+app.get("/admin/getAllData", (req, res) => {
+    res.send("All data sent")
+})
 app.listen(7777, () => {
     console.log("Server is successfully listening on port 7777...")
 })
