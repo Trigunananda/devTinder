@@ -31,4 +31,5 @@
 - How expressJs basically handles request behind the scenes
 - Write a dummy middleware for admin
 - Write a dummy auth middleware for all user,routes except /user/login
+- Error handling app.use("/",(err,req,res,next)=>{})
 
