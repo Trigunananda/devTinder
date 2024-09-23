@@ -1,28 +1,32 @@
 const express = require("express")
-const { adminAuth, userAuth } = require("./middlewares/auth")
+const connectDB=require("./config/database");
 const app = express()
+const User = require("./models/user")
 
-//error should be first parameter
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("Something went wrong")
+app.post("/signup",async (req,res)=>{
+    const userObj = {
+        firstName:"Balia",
+        lastName:"swain",
+        emailId:"swain.com",
+        password:"swain123"
     }
+    // Cretaing a new instance of the user model
+    const user = new User(userObj);
+  try {
+     await user.save();
+     res.send("User Added Successfully")
+  } catch (error) {
+    res.status(400).send("Error saving the user:" + err.message)
+  }
 })
-app.get("/getUserData", (req, res) => {
-    // try {
-        //logic of DB call and get user data
-        throw new Error("jdzhg")
-        res.send("User data sent")
-    // } 
-    // catch (error) {
-    //    res.status(500).send("Some error contact suppoet team") 
-    // }
-})
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("Something went wrong")
-    }
-})
-app.listen(7777, () => {
-    console.log("Server is successfully listening on port 7777...")
+
+connectDB().then(() => {
+    //1st database connection
+    console.log("Database connection Established...")
+    //then connect the server
+    app.listen(7777, () => {
+        console.log("Server is successfully listening on port 7777...")
+    })
+}).catch(() => {
+    console.log("Database cannot be connected!!")
 })
