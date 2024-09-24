@@ -1,23 +1,21 @@
 const express = require("express")
-const connectDB=require("./config/database");
+const connectDB = require("./config/database");
 const app = express()
 const User = require("./models/user")
 
-app.post("/signup",async (req,res)=>{
-    const userObj = {
-        firstName:"Balia",
-        lastName:"swain",
-        emailId:"swain.com",
-        password:"swain123"
+//it reads the JSON object and convert the JS object to request
+app.use(express.json())
+app.post("/signup", async (req, res) => {
+
+
+ // Cretaing a new instance of the user model
+    const user = new User(req.body);
+    try {
+        await user.save();
+        res.send("User Added Successfully")
+    } catch (error) {
+        res.status(400).send("Error saving the user:" + err.message)
     }
-    // Cretaing a new instance of the user model
-    const user = new User(userObj);
-  try {
-     await user.save();
-     res.send("User Added Successfully")
-  } catch (error) {
-    res.status(400).send("Error saving the user:" + err.message)
-  }
 })
 
 connectDB().then(() => {
