@@ -39,7 +39,7 @@ app.get("/user", async (req, res) => {
 // Feed API - GET/feed - get all the user from the database
 app.get("/feed", async (req, res) => {
     try {
-        //to get all object
+        //to get all object using {}
         const users = await User.find({})
         res.send(users)
     } catch (error) {
@@ -74,17 +74,28 @@ app.delete("/user", async (req, res) => {
     }
 })
 
+
 // Update data of the user
-app.patch("/user", async (req, res) => {
-    const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+    const userId = req.params?.userId;
     const data = req.body;
     // console.log(data)
     try {
+        // only this part is ["userId","photoUrl","about","gender","age","skills"] changed 
+        //emailId and random thing not updated
+        const ALLOWED_UPDATES = ["userId", "photoUrl", "about", "gender", "age", "skills"]
+        const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k))
+        if (!isUpdateAllowed) {
+            throw new Error("Update not allowed")
+        }
+        if (data?.skills.length > 10) {
+            throw new Error("Skills can not contain more than 10")
+        }
         const user = await User.findByIdAndUpdate({ _id: userId }, data, { returnDocument: "before", runValidators: true })
         console.log(user)
         res.send("User updated Successfully")
     } catch (error) {
-        res.status(500).send("UPDATE FAILED"+ error.message)
+        res.status(500).send("UPDATE FAILED" + error.message)
     }
 
 })

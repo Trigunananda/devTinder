@@ -60,3 +60,7 @@
 - Add default
 - create a custom validate function for gender
 - Improve the DB schema - PUT all appropriate validation on each field in Schema
+- Add API level validation on patch request and Signup post api
+- DATA Sanitization - Add API validation for each field
+- Install validator
+- Explore validator library function and use validator function for password,email and photoUrl

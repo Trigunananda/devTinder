@@ -1,31 +1,40 @@
 const mongoose = require("mongoose");
+var validator = require('validator');
 const userSchema = new mongoose.Schema(
     {
         firstName: {
             type: String,
             required: true,
             minLength: 5,
-            maxLength: 50,
+            maxLength: 25,
         },
         lastName: {
             type: String,
             minLength: 5,
-            maxLength: 50,
+            maxLength: 25,
         },
         emailId: {
             type: String,
             minLength: 5,
-            maxLength: 50,
+            maxLength: 25,
             lowercase: true,
             required: true,
             unique: true,
-            trim: true
+            trim: true,
+            validate(value){
+                if(!validator.isEmail(value)){
+                    throw new Error("Invalid Email Address" + value)
+                }
+            }
         },
         password: {
             type: String,
-            minLength: 6,
-            maxLength: 15,
-            required: true
+            required: true,
+            validate(value){
+                if(!validator.isStrongPassword(value)){
+                    throw new Error("Enter a strong Password  " + value)
+                }
+            }
         },
         age: {
             type: String,
@@ -44,7 +53,12 @@ const userSchema = new mongoose.Schema(
         },
         photoUrl: {
             type: String,
-            default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSBnJ1jac5WWtVhWh-XPZqN8bglxnDy3bURim1BiRPikxTcyexME-WDF1pYw&s"
+            default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSBnJ1jac5WWtVhWh-XPZqN8bglxnDy3bURim1BiRPikxTcyexME-WDF1pYw&s",
+            validate(value){
+                if(!validator.isURL(value)){
+                    throw new Error("Invalid Photo URL  " + value)
+                }
+            }
         },
         about: {
             type: String,
