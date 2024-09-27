@@ -4,16 +4,23 @@ const app = express()
 const User = require("./models/user")
 const { validateSignUpData } = require("./utils/validation")
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require('jsonwebtoken');
+
+//whenever i reading the request i want the data to be parse into json and then I want to get it
 app.use(express.json())
+app.use(cookieParser())
+
+
 
 
 app.post("/signup", async (req, res) => {
     //validation of the data
     try {
         validateSignUpData(req)
-        const {firstName,lastName,emailId,password}=req.body
+        const { firstName, lastName, emailId, password } = req.body
         //Encrypt the data
-        const passwordHash = await bcrypt.hash(password,10);
+        const passwordHash = await bcrypt.hash(password, 10);
         console.log(passwordHash)
 
         //Creating a new instance of the user Model
@@ -21,7 +28,7 @@ app.post("/signup", async (req, res) => {
             firstName,
             lastName,
             emailId,
-            password:passwordHash
+            password: passwordHash
         });
         await user.save();
         res.send("User Added Successfully")
@@ -30,27 +37,64 @@ app.post("/signup", async (req, res) => {
     }
 })
 
-app.post("/login",async(req,res)=>{
-try {
-    const{ emailId,password }=req.body;
-    const user = await User.findOne({ emailId : emailId});
-    
-    if(!user){
-        throw new Error("Invalid Credentials")
-    }
-    const isPasswordValid = await bcrypt.compare(password,user.password);
-    if(isPasswordValid){
-        res.send("Login Successfully!!!")
-    }
-    else{
-        throw new Error("Invalid Credentials")
-    }
+app.post("/login", async (req, res) => {
+    try {
+        const { emailId, password } = req.body;
+        const user = await User.findOne({ emailId: emailId });
 
-} catch (error) {
-    res.status(400).send("ERROR : " + error.message)
-}
+        if (!user) {
+            throw new Error("Invalid Credentials")
+        }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (isPasswordValid) {
+            //Create a JWT Token
+            // I am hiding the information of userId inside the token i.e _id:user._id
+            // Secret is the password key that basically server know i.e DEV@Developer$790
+            const token = await jwt.sign({ _id: user._id }, "DEV@Developer$790")
+            console.log(token)
+            //Add the token to cookie and send the back response to the user
+            res.cookie("token", token);
+
+            res.send("Login Successfully!!!")
+        }
+        else {
+            throw new Error("Invalid Credentials")
+        }
+
+    } catch (error) {
+        res.status(400).send("ERROR : " + error.message)
+    }
 })
 
+app.get("/profile", async (req, res) => {
+
+    try {
+            const cookies = req.cookies;
+    
+            const { token } = cookies;
+            if(!token){
+                throw new Error("Invalid TOKEN")
+            }
+            //validate my token
+            //token coming in the req and pass the secret key of DEV@Developer$790
+            const decodedMessage = await jwt.verify(token, "DEV@Developer$790");
+            // console.log(decodedMessage) //{ _id: '66f633408ee05ce00841da6f', iat: 1727411021 }
+            // console.log(cookies)
+    
+            const { _id } = decodedMessage
+            //This token is of the specific user
+            console.log("Logged in USer is: " + _id)
+            const user = await User.findById(_id)
+         //suppose the token is valid but user is not exist in the database
+         if(!user){
+            throw new Error("User does not exist")
+         }
+            res.send(user);
+    } catch (error) {
+        res.status(400).send("ERROR: " + error.message)
+    }
+    
+});
 //Get user by email
 app.get("/user", async (req, res) => {
     const userEmail = req.body.emailId;
