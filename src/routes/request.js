@@ -63,11 +63,10 @@ requestRouter.post(
             if (!allowedStatus.includes(status)) {
                 return res.status(400).json({ message: "Status not allowed!" });
             }
-
+            // Find the connection request without limiting it to a specific status
             const connectionRequest = await ConnectionRequest.findOne({
                 _id: requestId,
                 toUserId: loggedInUser._id
-
             });
             if (!connectionRequest) {
                 return res
@@ -88,7 +87,7 @@ requestRouter.post(
                     message: "Connection request cannot be processed in its current state."
                 });
             }
-                     connectionRequest.status = status;
+            connectionRequest.status = status;
 
             const data = await connectionRequest.save();
 
