@@ -44,14 +44,16 @@ const userSchema = new mongoose.Schema(
         },
         gender: {
             type: String,
-            minLength: 1,
-            maxLength: 15,
+            enum: {
+                values: ["male", "female", "other"],
+                message: `{VALUE} is not a valid gender type`,
+            },
             // when creating new object at this time validate function run
-            validate(value) {
-                if (!["male", "female", "others"].includes(value)) {
-                    throw new Error("Gender data is not valid")
-                }
-            }
+            // validate(value) {
+            //     if (!["male", "female", "others"].includes(value)) {
+            //         throw new Error("Gender data is not valid")
+            //     }
+            // }
         },
         photoUrl: {
             type: String,
@@ -84,6 +86,8 @@ userSchema.methods.getJWT = async function () {
     return token;
 };
 userSchema.methods.validatePassword = async function (passwordInputByUser) {
+    // The this keyword refers to the current user document, which means user.password is the hashed password
+    // stored for the user in MongoDB.
     const user = this;
     const passwordHash = user.password;
 

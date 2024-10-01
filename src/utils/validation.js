@@ -14,7 +14,6 @@ const validateSignUpData = (req) => {
         throw new Error("Please enter a strong password")
     }
 }
-
 const validateEditProfileData = (req) => {
     const allowedEditFields = [
         "firstName",
@@ -32,7 +31,8 @@ const validateEditProfileData = (req) => {
 
     return isEditAllowed;
 };
+
 module.exports = {
     validateEditProfileData,
-    validateSignUpData
+    validateSignUpData,
 }
