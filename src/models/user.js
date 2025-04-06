@@ -48,19 +48,20 @@ const userSchema = new mongoose.Schema(
         values: ["male", "female", "other"],
         message: `{VALUE} is not a valid gender type`,
       },
-      isPremium:{
-        type:Boolean,
-        default:false,
-      },
-      membershipType: {
-        type: String,
-      },
+  
       // when creating new object at this time validate function run
       // validate(value) {
       //     if (!["male", "female", "others"].includes(value)) {
       //         throw new Error("Gender data is not valid")
       //     }
       // }
+    },
+    isPremium:{
+      type:Boolean,
+      default:false,
+    },
+    membershipType: {
+      type: String,
     },
     photoUrl: {
       type: String,
