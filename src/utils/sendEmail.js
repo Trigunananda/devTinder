@@ -35,7 +35,7 @@ const run = async (subject, body, toEmailId) => {
     "akshaysaini.in@gmail.com",
     "akshay@devtinder.in",
     subject,
-    body
+    body,
   );
 
   try {

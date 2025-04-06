@@ -18,8 +18,8 @@
 - Orders of the routes matter a lot
 - Install a postman app and make a workspace/collection > test API call
 - Write logic to handle GET POST DELETE API call and test into POST man
-- Exploring routing and use of  ?, +, (), * in the routes
-- use of regex in routes /a/, /.*fly$/
+- Exploring routing and use of ?, +, (), \* in the routes
+- use of regex in routes /a/, /.\*fly$/
 - Reading thw query params in the routes
 - Reading the dynamic routes
 
@@ -27,7 +27,7 @@
 - next()
 - next() along and error along with res.send()
 - app.use("/route",rh,[rh2,rh3],rh4,rh5);
-- What is middleware.Ehy do we need it 
+- What is middleware.Ehy do we need it
 - How expressJs basically handles request behind the scenes
 - Write a dummy middleware for admin
 - Write a dummy auth middleware for all user,routes except /user/login
@@ -47,7 +47,7 @@
 - make your signup api dynamic to receive data from the end user
 - user.findOne with duplicate emailIds,which object returned
 - API- Get user by email
-- API-  Feed API - GET/feed - get all the user from the database
+- API- Feed API - GET/feed - get all the user from the database
 - create a delete user API
 - Difference between PATCH and PUT
 - API update user
@@ -55,7 +55,7 @@
 - What are the options in a model.findOneAndUpdate,explore more about it
 - API - update the user api with email id
 
-- Explore schematype options from  the documentation
+- Explore schematype options from the documentation
 - add,require,unique,lowercase,min,minLength,trim
 - Add default
 - create a custom validate function for gender
@@ -105,9 +105,8 @@
 - Read more about indexes in MongoDB
 - Why do we need index in DB?
 - What is the advantages and disadvantage of creating?
-- Read this arcticle about compond indexes - https://www.mongodb.com/docs/manual/core/indexes/index-types/      index-compound/
+- Read this arcticle about compond indexes - https://www.mongodb.com/docs/manual/core/indexes/index-types/ index-compound/
 - ALWAYS THINK ABOUT CORNER CASES
-
 
 - Write code with proper validations for POST /request/review/:status/:requestId
 - Thought process - POST vs GET
@@ -125,6 +124,9 @@
 - /feed?page=2&limit=10 => 11-20 => .skip(10) & .limit(10)
 - /feed?page=3&limit=10 => 21-30 => .skip(20) & .limit(10)
 - /feed?page=4&limit=10 => 21-30 => .skip(20) & .limit(10)
-- skip = (page-1)*limit;
+- skip = (page-1)\*limit;
 
-
+# Reference
+- [crontab.guru](https://crontab.guru/)
+- bee queue package
+- bull package
